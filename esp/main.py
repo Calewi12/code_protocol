@@ -29,13 +29,59 @@ def handle_message(message):
 
 
 async def process_rx():
+   # stream = []
+    stream = b''
+    message = b''
+    send_queue = []
+    receiving_message=False
+
     while True:
+        # read one byte
         c = uart.read(1)
-        if c:
-           try:
-             print("ESP received:", c.decode("utf-8"), end='')
-           except UnicodeError:
-             print("ESP received (unreadable byte):", c)
+        # if c is not empty:
+        if c is not None:
+
+            stream+=c
+            try:
+                if stream[-2:]==b'AZ':
+                    # print('ESP: message start:')
+                    message=stream[-2:-1]
+                    receiving_message=True
+            except IndexError:
+                pass
+            try:
+                if stream[-2:]==b'YB':
+                    message+=stream[-1:]
+                    stream=b''
+                    receiving_message = False
+                    # print('ESP: message received:',message)
+                    handle_message(message)
+                    led.value(led.value()^1)
+            
+            except IndexError:
+                pass
+            
+            if receiving_message:
+                
+                message+=c
+
+                if len(message)==3:
+                    if not (message[2:3] in team):
+                        print('ESP: sender not in team')
+                    else:
+                        print('ESP: sender in team')
+
+                if len(message)==4:
+                    if not (message[3:4] in team):
+                        print('ESP: receiver not in team')
+                    else:
+                        print('ESP: receiver in team')
+
+                if len(message)>MAX_MESSAGE_LEN:
+                    receiving_message = False
+                    print('ESP: Message too long, aborting')
+                    message=b''
+
 
     await asyncio.sleep_ms(10)    
 
