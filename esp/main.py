@@ -32,7 +32,11 @@ async def process_rx():
     while True:
         c = uart.read(1)
         if c:
-            print("ESP received raw byte:", c)
+           try:
+             print("ESP received:", c.decode("utf-8"), end='')
+           except UnicodeError:
+             print("ESP received (unreadable byte):", c)
+
     await asyncio.sleep_ms(10)    
 
 async def heartbeat():
