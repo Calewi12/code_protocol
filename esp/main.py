@@ -15,6 +15,8 @@ test_messages = [
     b"AZxdFanTestYB",          # Invalid sender (x not in team)
     b"AZabThisMessageIsWayTooLongForTheProtocolToHandleAndShouldTriggerOverflowProtectionYB",  # Oversized
     b"AZabYB",                 # Valid but empty message
+    b"AZaabFT5YB",             # Fan Target: to b, from a, speed = 5
+
 ]
 
 # initialize a new UART class
