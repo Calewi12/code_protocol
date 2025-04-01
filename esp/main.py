@@ -52,7 +52,7 @@ async def process_rx():
             try:
                 if stream[-2:]==b'AZ':
                     # print('ESP: message start:')
-                    message=stream[-2:-1]
+                    message=stream[-2:]            # Start with AZ
                     receiving_message=True
             except IndexError:
                 pass
@@ -92,6 +92,13 @@ async def process_rx():
 
         await asyncio.sleep_ms(10)    
 
+async def run_tests():
+    await asyncio.sleep(3)  # Small delay to let everything start up
+    for msg in test_messages:
+        print("ESP: sending test message", msg)
+        uart.write(msg)
+        await asyncio.sleep(3)  # Give time between messages
+
 async def heartbeat():
 
     while True:
@@ -106,7 +113,9 @@ async def main():
         await asyncio.sleep(1)
 
 asyncio.create_task(process_rx())
-asyncio.create_task(heartbeat())
+#asyncio.create_task(heartbeat())
+asyncio.create_task(run_tests())
+
 
 try:
     asyncio.run(main())
