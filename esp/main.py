@@ -9,6 +9,13 @@ MAX_MESSAGE_LEN=64
 team = [b'a',b'b',b'c',b'd']
 id = b'a'
 broadcast = 'X'
+test_messages = [
+    b"AZabHello!YB",           # Valid: to b, from a
+    b"AZacFanHiYB",            # Invalid receiver (c not in team)
+    b"AZxdFanTestYB",          # Invalid sender (x not in team)
+    b"AZabThisMessageIsWayTooLongForTheProtocolToHandleAndShouldTriggerOverflowProtectionYB",  # Oversized
+    b"AZabYB",                 # Valid but empty message
+]
 
 # initialize a new UART class
 uart = UART(2, 9600,tx=17,rx=16)
