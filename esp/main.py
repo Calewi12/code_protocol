@@ -104,8 +104,8 @@ async def run_tests():
 async def heartbeat():
 
     while True:
-        print('ESP: sending')
-        uart.write(b'AZabHello!YB')
+        print('ESP: sending test Fan Speed message')
+        uart.write(b'AZaabFT5YB')
         await asyncio.sleep(10)    
 
 
@@ -115,7 +115,7 @@ async def main():
         await asyncio.sleep(1)
 
 asyncio.create_task(process_rx())
-#asyncio.create_task(heartbeat())
+asyncio.create_task(heartbeat())
 asyncio.create_task(run_tests())
 
 
